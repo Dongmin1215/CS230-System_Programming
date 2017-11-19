@@ -1,0 +1,100 @@
+
+test:	file format Mach-O 64-bit x86-64
+
+Disassembly of section __TEXT,__text:
+__text:
+100000f00:	55 	pushq	%rbp
+100000f01:	48 89 e5 	movq	%rsp, %rbp
+100000f04:	48 83 ec 20 	subq	$32, %rsp
+100000f08:	48 89 7d f8 	movq	%rdi, -8(%rbp)
+100000f0c:	48 89 75 f0 	movq	%rsi, -16(%rbp)
+100000f10:	48 8b 75 f8 	movq	-8(%rbp), %rsi
+100000f14:	48 3b 75 f0 	cmpq	-16(%rbp), %rsi
+100000f18:	0f 8e 11 00 00 00 	jle	17 <_absdiff+0x2F>
+100000f1e:	48 8b 45 f8 	movq	-8(%rbp), %rax
+100000f22:	48 2b 45 f0 	subq	-16(%rbp), %rax
+100000f26:	48 89 45 e8 	movq	%rax, -24(%rbp)
+100000f2a:	e9 0c 00 00 00 	jmp	12 <_absdiff+0x3B>
+100000f2f:	48 8b 45 f0 	movq	-16(%rbp), %rax
+100000f33:	48 2b 45 f8 	subq	-8(%rbp), %rax
+100000f37:	48 89 45 e8 	movq	%rax, -24(%rbp)
+100000f3b:	48 8d 3d 68 00 00 00 	leaq	104(%rip), %rdi
+100000f42:	48 8b 75 e8 	movq	-24(%rbp), %rsi
+100000f46:	b0 00 	movb	$0, %al
+100000f48:	e8 3d 00 00 00 	callq	61
+100000f4d:	48 8b 75 e8 	movq	-24(%rbp), %rsi
+100000f51:	89 45 e4 	movl	%eax, -28(%rbp)
+100000f54:	48 89 f0 	movq	%rsi, %rax
+100000f57:	48 83 c4 20 	addq	$32, %rsp
+100000f5b:	5d 	popq	%rbp
+100000f5c:	c3 	retq
+100000f5d:	0f 1f 00 	nopl	(%rax)
+100000f60:	55 	pushq	%rbp
+100000f61:	48 89 e5 	movq	%rsp, %rbp
+100000f64:	48 83 ec 10 	subq	$16, %rsp
+100000f68:	b8 03 00 00 00 	movl	$3, %eax
+100000f6d:	89 c7 	movl	%eax, %edi
+100000f6f:	b8 04 00 00 00 	movl	$4, %eax
+100000f74:	89 c6 	movl	%eax, %esi
+100000f76:	e8 85 ff ff ff 	callq	-123 <_absdiff>
+100000f7b:	31 c9 	xorl	%ecx, %ecx
+100000f7d:	48 89 45 f8 	movq	%rax, -8(%rbp)
+100000f81:	89 c8 	movl	%ecx, %eax
+100000f83:	48 83 c4 10 	addq	$16, %rsp
+100000f87:	5d 	popq	%rbp
+100000f88:	c3 	retq
+
+_absdiff:
+100000f00:	55 	pushq	%rbp
+100000f01:	48 89 e5 	movq	%rsp, %rbp
+100000f04:	48 83 ec 20 	subq	$32, %rsp
+100000f08:	48 89 7d f8 	movq	%rdi, -8(%rbp)
+100000f0c:	48 89 75 f0 	movq	%rsi, -16(%rbp)
+100000f10:	48 8b 75 f8 	movq	-8(%rbp), %rsi
+100000f14:	48 3b 75 f0 	cmpq	-16(%rbp), %rsi
+100000f18:	0f 8e 11 00 00 00 	jle	17 <_absdiff+0x2F>
+100000f1e:	48 8b 45 f8 	movq	-8(%rbp), %rax
+100000f22:	48 2b 45 f0 	subq	-16(%rbp), %rax
+100000f26:	48 89 45 e8 	movq	%rax, -24(%rbp)
+100000f2a:	e9 0c 00 00 00 	jmp	12 <_absdiff+0x3B>
+100000f2f:	48 8b 45 f0 	movq	-16(%rbp), %rax
+100000f33:	48 2b 45 f8 	subq	-8(%rbp), %rax
+100000f37:	48 89 45 e8 	movq	%rax, -24(%rbp)
+100000f3b:	48 8d 3d 68 00 00 00 	leaq	104(%rip), %rdi
+100000f42:	48 8b 75 e8 	movq	-24(%rbp), %rsi
+100000f46:	b0 00 	movb	$0, %al
+100000f48:	e8 3d 00 00 00 	callq	61
+100000f4d:	48 8b 75 e8 	movq	-24(%rbp), %rsi
+100000f51:	89 45 e4 	movl	%eax, -28(%rbp)
+100000f54:	48 89 f0 	movq	%rsi, %rax
+100000f57:	48 83 c4 20 	addq	$32, %rsp
+100000f5b:	5d 	popq	%rbp
+100000f5c:	c3 	retq
+100000f5d:	0f 1f 00 	nopl	(%rax)
+
+_main:
+100000f60:	55 	pushq	%rbp
+100000f61:	48 89 e5 	movq	%rsp, %rbp
+100000f64:	48 83 ec 10 	subq	$16, %rsp
+100000f68:	b8 03 00 00 00 	movl	$3, %eax
+100000f6d:	89 c7 	movl	%eax, %edi
+100000f6f:	b8 04 00 00 00 	movl	$4, %eax
+100000f74:	89 c6 	movl	%eax, %esi
+100000f76:	e8 85 ff ff ff 	callq	-123 <_absdiff>
+100000f7b:	31 c9 	xorl	%ecx, %ecx
+100000f7d:	48 89 45 f8 	movq	%rax, -8(%rbp)
+100000f81:	89 c8 	movl	%ecx, %eax
+100000f83:	48 83 c4 10 	addq	$16, %rsp
+100000f87:	5d 	popq	%rbp
+100000f88:	c3 	retq
+Disassembly of section __TEXT,__stubs:
+__stubs:
+100000f8a:	ff 25 80 00 00 00 	jmpq	*128(%rip)
+Disassembly of section __TEXT,__stub_helper:
+__stub_helper:
+100000f90:	4c 8d 1d 71 00 00 00 	leaq	113(%rip), %r11
+100000f97:	41 53 	pushq	%r11
+100000f99:	ff 25 61 00 00 00 	jmpq	*97(%rip)
+100000f9f:	90 	nop
+100000fa0:	68 00 00 00 00 	pushq	$0
+100000fa5:	e9 e6 ff ff ff 	jmp	-26 <__stub_helper>
