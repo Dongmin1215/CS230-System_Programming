@@ -1,0 +1,31 @@
+./sdriver.pl -t trace13.txt -s ./tshref -a "-p"
+#
+# trace13.txt - Restart every stopped process in process group
+#
+tsh> ./mysplit 4
+Job [1] (22699) stopped by signal 20
+tsh> jobs
+[1] (22699) Stopped ./mysplit 4 
+tsh> /bin/ps a
+  PID TTY      STAT   TIME COMMAND
+  963 tty7     Ss+    0:06 /usr/lib/xorg/Xorg -core :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -novtswitch
+  994 tty1     Ss+    0:00 /sbin/agetty --noclear tty1 linux
+22530 pts/8    Ss     0:00 -bash
+22694 pts/8    S+     0:00 make rtest13
+22695 pts/8    S+     0:00 /bin/sh -c ./sdriver.pl -t trace13.txt -s ./tshref -a "-p"
+22696 pts/8    S+     0:00 /usr/bin/perl ./sdriver.pl -t trace13.txt -s ./tshref -a -p
+22697 pts/8    S+     0:00 ./tshref -p
+22699 pts/8    T      0:00 ./mysplit 4
+22700 pts/8    T      0:00 ./mysplit 4
+22703 pts/8    R      0:00 /bin/ps a
+tsh> fg %1
+tsh> /bin/ps a
+  PID TTY      STAT   TIME COMMAND
+  963 tty7     Ss+    0:06 /usr/lib/xorg/Xorg -core :0 -seat seat0 -auth /var/run/lightdm/root/:0 -nolisten tcp vt7 -novtswitch
+  994 tty1     Ss+    0:00 /sbin/agetty --noclear tty1 linux
+22530 pts/8    Ss     0:00 -bash
+22694 pts/8    S+     0:00 make rtest13
+22695 pts/8    S+     0:00 /bin/sh -c ./sdriver.pl -t trace13.txt -s ./tshref -a "-p"
+22696 pts/8    S+     0:00 /usr/bin/perl ./sdriver.pl -t trace13.txt -s ./tshref -a -p
+22697 pts/8    S+     0:00 ./tshref -p
+22706 pts/8    R      0:00 /bin/ps a
