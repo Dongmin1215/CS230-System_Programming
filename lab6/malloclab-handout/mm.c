@@ -30,9 +30,9 @@ team_t team = {
     /* First member's email address */
     "theresaldm@kaist.ac.kr",
     /* Second member's full name (leave blank if none) */
-    "",
+    "Jaewon Kim",
     /* Second member's email address (leave blank if none) */
-    ""
+    "jaewon"
 };
 
 /* single word (4) or double word (8) alignment */
@@ -44,11 +44,126 @@ team_t team = {
 
 #define SIZE_T_SIZE (ALIGN(sizeof(size_t)))
 
+
+// Added some Macros
+#define WSIZE 4             // word and header/footer size (bytes)
+#define DSIZE 8             // double word size (bytes)
+#define CHUNKSIZE (1<<12)   // Extend heap by this amount (bytes)
+
+#define MAX(x,y) ((x) > (y)? (x) : (y))
+
+#define PACK(size, alloc)       ((size) | (alloc))
+// Pack a size and allocated bit into a word
+#define GET(p)          (*(unsigned int *)(p))
+#define PUT(p, val)     (*(unsigned int *)(p) = (val))
+
+// Given 
+#define HDRP(bp)        ((char *)(bp) - WSIZE)
+#define FTRP(bp)        ((char *)(bp) + GET_SIZE(HDRP(bp)) - DSIZE)
+
+// Read the size and allocated fields from address p
+#define GET_SIZE(p)     (GET(p) & ~0x7)
+#define GET_ALLOC(p)   (GET(p) & 0x1)
+
+// Given the block ptr bp, compute address of next and previous blocks
+#define NEXT_BLKP(bp)   ((char *)(bp) + GET_SIZE(((char *)(bp) - WSIZE)))
+#define PREV_BLKP(bp)   ((char *)(bp) - GET_SIZE(((char *)(bp) - DSIZE)))
+
+static void *extend_heap(size_t words);
+static void *coaleesce(void *bp);
+static char *heap_listp;
+
+
+static void *coalesce(void * bp)
+{
+    size_t prev_alloc = GET_ALLOC(FTRP(PREV_BLKP(bp)));
+    size_t next_alloc = GET_ALLOC(HDRP(NEXT_BLKP(bp)));
+    size_t size = GET_SIZE(HDRP(bp));
+
+    if (prev_alloc && next_alloc)
+        return bp;
+
+    else if (prev_alloc && !next_alloc){
+
+        size += GET_SIZE(HDRP(NEXT_BLKP(bp)));
+        PUT(HDRP(bp), PACK(size, 0));
+        PUT(FTRP(bp), PACK(size, 0));
+
+    }
+
+    else if (!prev_alloc && next_alloc){
+
+        size += GET_SIZE(HDRP(PREV_BLKP(bp)));
+        PUT(FTRP(bp), PACK(size, 0));
+        PUT(HDRP(PREV_BLKP(bp)), PACK(size, 0));
+        bp = PREV_BLKP(bp);
+
+    }
+
+    else{
+
+        size += GET_SIZE(HDRP(PREV_BLKP(bp))) + GET_SIZE(FTRP(NEXT_BLKP(bp)));
+        PUT(HDRP(PREV_BLKP(bp)), PACK(size, 0));
+        PUT(FTRP(NEXT_BLKP(bp)), PACK(size, 0));
+        bp = PREV_BLKP(bp);
+
+    }
+
+    return bp;
+
+
+}
+
+
+
+/* Extend_heap : Extend the heap with system call.
+ *               Insert the newly requested free block innto the appropriate list.
+ *
+ *
+ *
+ */
+
+static void *extend_heap(size_t words)
+{
+    char *bp;
+    size_t size;
+
+    // Allocate an even number of words to maintain alignment
+    size = (words % 2) ? (words + 1) * WSIZE : words * WSIZE;
+    if ((long)(bp = mem_sbrk(size)) == -1)
+        return NULL;
+
+    // Initialize free block header/footer and the epilogue header
+    PUT(HDRP(bp), PACK(size, 0));
+    PUT(FTRP(bp), PACK(size, -1));
+    PUT(HDRP(NEXT_BLKP(bp)), PACK(0, 1));
+
+    return coalesce(bp);
+
+}
+
+
+
+
+
 /* 
  * mm_init - initialize the malloc package.
  */
 int mm_init(void)
 {
+
+    if ((heap_listp = mem_sbrk(4 * WSIZE)) == (void *) - 1)
+        return -1;
+    PUT(heap_listp, 0);
+    PUT(heap_listp + (1 * WSIZE), PACK(DSIZE, 1));
+    PUT(heap_listp + (2 * WSIZE), PACK(DSIZE, 1));
+    PUT(heap_listp + (3 * WSIZE), PACK(0, 1));
+    heap_listp += (2 * WSIZE);
+
+    if (extend_heap(CHUNKSIZE/WSIZE) == NULL)
+        return -1;
+
+
     return 0;
 }
 
@@ -71,8 +186,14 @@ void *mm_malloc(size_t size)
 /*
  * mm_free - Freeing a block does nothing.
  */
-void mm_free(void *ptr)
+void mm_free(void *bp)
 {
+    size_t size = GET_SIZE(HDRP(bp));
+
+    PUT(HDRP(bp), PACK(size, 0));
+    PUT(FTRP(bp), PACK(size, 0));
+
+    coalesce(bp);
 }
 
 /*
