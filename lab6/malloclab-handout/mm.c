@@ -246,9 +246,9 @@ static void *coalesce(void *bp)
         prev_alloc = 1;
     
     // Return if previous and next blocks are allocated
-    if (prev_alloc && next_alloc) {
+    if (prev_alloc && next_alloc) 
         return bp;
-    }
+    
 
     // Find the block and merge
     else if (prev_alloc && !next_alloc) {  
@@ -301,11 +301,11 @@ static void delete_node(void *bp) {
             segregated_free_list[list] = PRED(bp);
         }
     } else {
-        if (SUCC(bp) != NULL) {
+        if (SUCC(bp) != NULL) 
             SET_PTR(PRED_PTR(SUCC(bp)), NULL);
-        } else {
+        else
             segregated_free_list[list] = NULL;
-        }
+        
     }
     
     return;
@@ -330,7 +330,7 @@ static void *place(void *ptr, size_t asize)
     else if (asize >= 100) {
         // split block 
         PUT(HDRP(ptr), PACK(remainder, 0)); 
-        PUT(FTRP(ptr), PACK(remainder, 0)); /
+        PUT(FTRP(ptr), PACK(remainder, 0)); 
         REMOVE_TAG(HDRP(NEXT_BLKP(ptr)), PACK(asize, 1)); 
         REMOVE_TAG(FTRP(NEXT_BLKP(ptr)), PACK(asize, 1)); 
         insert_node(ptr, remainder);
