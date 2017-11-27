@@ -471,7 +471,7 @@ void *mm_realloc(void *bp, size_t size)
     if (size == 0)
         return NULL;
     
-    /* Adjust block size to include boundary tag and alignment requirements */
+    // Adjust block size to include boundary tag and alignment requirements 
     if (new_size <= DSIZE) 
         new_size = 2 * DSIZE;
     else 
